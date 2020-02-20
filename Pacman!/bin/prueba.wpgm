@@ -1,0 +1,40 @@
+import wollok.game.*
+import example.*
+import movimiento.*
+
+program pacman {
+	
+	//limites del tablero
+	game.width(14)
+	game.height(8)
+	
+	//imagen de fondo
+	game.boardGround("pacman.jpg")
+	
+	game.addVisual(pacman)
+	movimiento.configurarFlechas(pacman)
+	
+	game.addVisual(new Rivales(numero = 1))
+	game.addVisual(new Rivales(numero = 2))
+	game.addVisual(new Rivales(numero = 3))
+	
+	game.addVisual(new Frutas(numero = 1))
+	game.addVisual(new Frutas(numero = 2))
+	game.addVisual(new Frutas(numero =3))
+	// rivales
+	const rivales = [new Rivales(numero =1), new Rivales(numero =2), new Rivales(numero =3)]
+	
+	rivales.forEach { rival => 
+		game.addVisual(rival)
+		game.whenCollideDo(rival, { personaje =>
+			personaje.chocarCon(rival) 
+		})
+		game.onTick(2000,"movimiento", {rival.movete()
+		})
+	}
+	
+	const frutas = [new Frutas(numero = 1), new Frutas(numero =2), new Frutas(numero = 3)]
+	
+	game.title("Pacman!")
+	game.start()
+}
