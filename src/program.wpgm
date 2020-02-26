@@ -14,6 +14,11 @@ program pacman {
 	game.addVisual(pacman)
 	movimiento.configurarFlechas(pacman)
 	
+	game.say(pacman,"Muevete con las flechas para empezar!")
+	game.say(pacman,"Objetivo: No perder todas las vidas y ganar las mas posibles")
+	
+	game.showAttributes(pacman) //Me dice cuantas vidas tiene pasando el mouse por encima del pacman
+	
 	game.addVisual(new Rivales(numero = 1))
 	game.addVisual(new Rivales(numero = 2))
 	game.addVisual(new Rivales(numero = 3))
@@ -29,12 +34,17 @@ program pacman {
 		game.whenCollideDo(rival, { personaje =>
 			personaje.chocarCon(rival) 
 		})
-		game.onTick(2000,"movimiento", {rival.movete()
+		game.onTick(1.randomUpTo(5) * 500, "movimiento", {
+			rival.acercarseA(pacman)
 		})
 	}
-	
 	const frutas = [new Frutas(numero = 1), new Frutas(numero =2), new Frutas(numero = 3)]
 	
+	frutas.forEach{ fruta => 
+		game.addVisual(fruta)
+		game.whenCollideDo(fruta ,{personaje => personaje.chocarConFrutas(fruta)})
+	}
+
 	game.title("Pacman!")
-	game.start()
+	game.start()  
 }
