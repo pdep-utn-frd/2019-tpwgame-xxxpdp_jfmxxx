@@ -4,7 +4,7 @@ object pacman{
 	var property image = "pacman.png"
 	var property position = game.origin()
 	var vidas = 3
-
+	
 	method perderVida() {
 		vidas-=1
 		position = game.origin()	
@@ -16,6 +16,7 @@ object pacman{
 	}
 	method chocarCon(rival){
 		vidas-= 1
+		game.say(self,"Perdiste una vida!")
 		self.resetearPosition()
 		rival.resetearPosition()
 		if(self.juegoTerminado()){
@@ -27,8 +28,11 @@ object pacman{
 	}
 	method chocarConFrutas(fruta){
 		vidas += 1
+		game.say(self,"Ganaste una vida!")
+		self.resetearPosition()
+		fruta.resetarPosition()
 	}
-
+	
 
 }
 class Rivales{
@@ -38,13 +42,15 @@ class Rivales{
 	
 	method image() = "rival" + numero.toString() + ".png"
 	
-	method position() = game.at(numero + 1, numero + 2)
 	
-	method movete(){
-	const x = 0.randomUpTo(game.width()).truncate(0)
-	const y = 0.randomUpTo(game.height()).truncate(0)
-	position = game.at(x,y) 
-}	
+	method acercarseA(personaje) {
+		var otroPosicion = personaje.position()
+		var newX = position.x() + if (otroPosicion.x() > position.x()) 1 else -1
+		var newY = position.y() + if (otroPosicion.y() > position.y()) 1 else -1
+		newX = newX.max(0).min(game.width() - 1)
+		newY = newY.max(0).min(game.height() - 1)
+		position = game.at(newX, newY)
+	}
 	
 	method resetearPosition(){
 		position = game.at(numero +1 ,numero +1)
@@ -52,18 +58,18 @@ class Rivales{
 	method chocarCon(otro) {
 		self.resetPreviousPosition()
 	}
-	
 	method resetPreviousPosition() {
 		position = previousPosition 
 	}
+	
 }
 	
-
 class Frutas{
 	const numero = 1
-	var property position = game.at(7,4)
+	var property position = game.at(1,4)
 	
 	method image() = "fruta" + numero.toString() + ".png"
 	
-	method position() = game.at(numero + 1, numero + 5)
+	method position() = game.at(numero + 9, numero + 2)
+	
 }
